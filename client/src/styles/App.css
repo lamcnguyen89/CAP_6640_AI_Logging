@@ -1,0 +1,1237 @@
+@font-face {
+  font-family: 'SF Pro';
+  src: url('../assets/SF-Pro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container-fluid {
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+
+.border {
+  border: solid 1px black;
+}
+
+.full-height {
+  height: 100vh;
+}
+
+.row {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+
+/* -------------------------- BASE BUTTONS AND TEXT -------------------------- */
+
+
+
+.btn.btn-primary {
+  background-color: #160335;
+  color: #FFFFFF;
+  width: 120px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  font-family: 'SF Pro';
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.btn-primary:hover {
+  background-color: #4B2E7B;
+}
+
+.btn.btn-primary:disabled {
+  background-color: #DFDFDF;
+  color: #868686;
+}
+
+.btn.btn-primary:active {
+  background-color: #816F7D !important;
+  color: #FFFFFF !important;
+}
+
+.btn.btn-secondary {
+  background-color: #816F7D;
+  color: #FFFFFF;
+  width: 240px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  font-family: 'SF Pro';
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.btn-secondary:hover {
+  background-color: #EBE7E6;
+  color: #816F7D;
+}
+
+.btn.btn-secondary:disabled {
+  background-color: #DFDFDF;
+  color: #868686;
+}
+
+.btn.btn-secondary:active {
+  background-color: #DFDFDF !important;
+  color: #868686 !important;
+}
+
+.btn.tertiary-button {
+  display: flex;
+  background-color: #EBE7E6;
+  color: #242424;
+  width: 120px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SF Pro';
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.tertiary-button:hover {
+  background-color: #F2F2F2;
+  color: #816F7D;
+}
+
+.btn.tertiary-button:disabled {
+  background-color: #DFDFDF;
+  color: #868686;
+}
+
+.btn.tertiary-button:active {
+  background-color: #DFDFDF !important;
+  color: #868686 !important;
+}
+
+.quick-start-button {
+  background-color: transparent;
+  color: #1C7CED;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'SF Pro';
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.quick-start-button:hover {
+  background-color: transparent;
+  color: #1C7CED;
+}
+
+body {
+  font-family: "Source Sans Pro", sans-serif !important;
+}
+
+h1 {
+  font-family: 'SF Pro';
+  font-size: 32px;
+  font-weight: bold;
+}
+
+h2 {
+  font-family: 'SF Pro';
+  font-size: 24px;
+  font-weight: bold;
+}
+
+h3 {
+  font-family: 'SF Pro';
+  font-size: 20px;
+  font-weight: bold;
+}
+
+h4 {
+  font-family: 'SF Pro';
+  font-size: 20px;
+  font-weight: bold;
+}
+
+p {
+  font-family: 'SF Pro';
+}
+
+
+
+
+
+/*--------------------------------- INPUT AND LABELS ---------------------------------*/
+
+
+
+input {
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  outline: 1;
+  font-family: 'SF Pro';
+  font-size: 16px !important;
+}
+
+::placeholder {
+  color: #868686;
+  opacity: 1;
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+::-webkit-input-placeholder {
+  color: #868686;
+  opacity: 1;
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+::-moz-placeholder {
+  color: #868686;
+  opacity: 1;
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+:-moz-placeholder {
+  color: #868686;
+  opacity: 1;
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+:-ms-input-placeholder {
+  color: #868686;
+  opacity: 1;
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+input.is-invalid {
+  background-color: #f8d7da;
+  /* Light red background */
+}
+
+label {
+  font-family: 'SF Pro';
+  font-size: 16px;
+}
+
+textarea {
+  font-family: 'SF Pro';
+  font-size: 16px !important;
+}
+
+.form-check-input {
+  background-color: #EEE7ED;
+  border: 1px solid #EEE7ED;
+  border-radius: 6px;
+  width: 50px !important;
+  height: 30px !important;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #644F64;
+  border-color: #644F64;
+}
+
+.form-check-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.form-submit-button {
+  background-color: #816F7D !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.form-submit-button:hover {
+  background-color: #EBE7E6 !important;
+  color: #816F7D !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.reset-password-button {
+  background-color: #816F7D !important;
+  max-width: 240px !important;
+  min-width: 240px !important;
+  height: 44px !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.reset-password-button:hover {
+  background-color: #EBE7E6 !important;
+  max-width: 240px !important;
+  min-width: 240px !important;
+  height: 44px !important;
+  color: #816F7D !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+.toast-button {
+  background-color: rgb(29, 9, 61);
+  color: #FFFFFF;
+  width: 160px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'SF Pro';
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.toast-button:hover {
+  background-color: #EBE7E6;
+  color: #816F7D;
+}
+
+.dropdown {
+  height: 44px !important;
+  border: 1px solid #DFDFDF;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #242424;
+  font-size: 16px;
+  font-weight: 590;
+  align-items: center;
+}
+
+.dropdown-toggle {
+  background-image: url('../assets/dropdownArrows.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 20px !important;
+  color: black !important;
+  font-family: 'SF Pro';
+  font-size: 16px;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 590;
+  background-color: transparent;
+  border: none;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+  background-color: #f0f0f0;
+}
+
+.dropdown-toggle:active {
+  background-color: #cbcbcb;
+}
+
+.dropdown-toggle.is-invalid {
+  border: 1px solid #dc3545;
+  border-color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.dropdown-item {
+  font-family: 'SF Pro';
+  font-size: 16px;
+  align-items: center;
+  display: flex;
+  color: black;
+}
+
+.dropdown-item.active,
+.dropdown-item:active,
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+  background-color: #816F7D;
+}
+
+.form-select {
+  background-image: url('../assets/dropdownArrows.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 20px !important;
+  color: black !important;
+  font-family: 'SF Pro';
+  font-size: 16px;
+  height: 44px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 590;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+/* -------------------------- COLUMN DEFINITIONS -------------------------- */
+
+
+
+.column-def-dropdown {
+  width: 200px !important;
+  height: 44px !important;
+  border: 1px solid #DFDFDF !important;
+  border-radius: 4px !important;
+  background: #FFFFFF !important;
+  color: #242424 !important;
+  font-size: 16px !important;
+  font-weight: 590 !important;
+  align-items: center !important;
+  display: flex !important;
+}
+
+.column-def-dropdown-toggle {
+  color: black !important;
+  font-family: 'SF Pro' !important;
+  font-size: 16px !important;
+  width: 200px !important;
+  height: 44px !important;
+  align-items: center !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  font-weight: 590 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.column-def-dropdown-toggle:hover,
+.column-def-dropdown-toggle:focus {
+  background-color: #f0f0f0 !important;
+}
+
+.column-def-dropdown-toggle:active {
+  background-color: #cbcbcb !important;
+}
+
+.column-def-dropdown-item {
+  font-family: 'SF Pro' !important;
+  font-size: 16px !important;
+  width: 200px !important;
+  align-items: center !important;
+  display: flex !important;
+  color: black !important;
+}
+
+.column-def-table-header {
+  font: 'SF Pro';
+  color: #644F64 !important;
+  font-weight: bold;
+}
+
+.column-def-rearrange-btn {
+  height: 12px !important;
+  width: 24px !important;
+  background-color: transparent !important;
+  padding: 0px !important;
+  border: none !important;
+  border-radius: 0px !important;
+  line-height: 0;
+}
+
+
+
+/* -------------------------- DASHBOARD AND NAVBAR -------------------------- */
+
+
+
+.bg-navy {
+  background: #160335;
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-size: 1.3rem;
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: white;
+  background-color: rgb(0, 0, 44);
+  border-color: none;
+}
+
+.nav-tabs {
+  border-bottom: none;
+  border-top: none;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.nav-tabs .nav-link:hover {
+  color: lightblue;
+}
+
+.user-icon {
+  fill: white !important;
+  width: 30px;
+  height: 25px;
+}
+
+.navbar .nav-link:hover {
+  color: #4B2E7B !important;
+}
+
+.profile-link:hover svg {
+  fill: #4B2E7B !important;
+}
+
+#nav-brand {
+  height: auto;
+  width: 100%;
+}
+
+.experiment-cards {
+  border-radius: 5px;
+  border: solid #DFDFDF 2px;
+  font-size: 14px;
+}
+
+.dashboard-icons {
+  max-width: 24px;
+  max-height: 24px;
+  min-width: 12px;
+  min-height: 12px;
+  cursor: pointer;
+}
+
+/* Initially hide the tooltip text. */
+.dashboard-icons .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 3px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dashboard-icons:hover {
+    max-width: 24px;
+  max-height: 24px;
+  min-width: 12px;
+  min-height: 12px;
+  cursor: pointer;
+  border: 1px solid #816F7D;
+  box-shadow: 0 0 5px #816F7D;
+  transform: scale(1.05);
+}
+
+.dashboard-icons:hover .tooltiptext {
+  visibility: visible;
+}
+
+.experiment-link {
+  color: #816F7D
+}
+
+.experiment-link:hover {
+  color: #160335
+}
+
+.status-output {
+  display: inline-block;
+  color: #ADADAD;
+  border: 2px solid #ADADAD;
+  border-radius: 9999px;
+  padding: 5px 20px;
+  text-align: center;
+  cursor: default;
+}
+
+.enrolled-status {
+  color: #ADADAD;
+  cursor: default;
+}
+
+.enrolled-title {
+  color: #816F7D;
+  font-weight: bold;
+  cursor: default;
+}
+
+.status-creator {
+  background: #76AD96;
+}
+
+.status-collaborator {
+  background: #A33327;
+}
+
+.dashboard-button {
+  background-color: transparent;
+  border: none;
+}
+
+.dashboard-button:focus {
+  outline: none;
+}
+
+.addCards {
+  border-radius: 2%;
+  border: solid black 4px;
+  background: lightgray;
+  color: #A33327;
+  font-size: 1.4rem;
+  font-weight: 700;
+  height: 140px;
+}
+
+.menu-drop.responsive {
+  height: 90px;
+  width: 100px;
+  border: solid black 3px;
+}
+
+.menu-drop {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: absolute;
+  overflow: hidden;
+  height: 0px;
+  border: solid black 0;
+  font-size: 1.2rem;
+  transition: height 0.3s linear;
+}
+
+.menu-list-items {
+  list-style: none !important;
+}
+
+.settings-icon:hover {
+  color: white;
+}
+
+
+
+/* -------------------------- RESULTS -------------------------- */
+
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination .page-item.active .page-link {
+  background: none;
+  color: #644F64;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+}
+
+.pagination .page-item .page-link {
+  background: none;
+  color: #A9A9A9;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+}
+
+.results-table {
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    align-content: center;
+  }
+
+  th {
+    color: #816F7D;
+  }
+}
+
+.trial-tabs-container {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.trial-tabs-container .trial-buttons {
+  display: flex;
+  width: 160px;
+  height: 40px;
+  padding: 11px 58px;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: #FFFFFF;
+  border: 1px solid var(--Colors-Brand-Medium-Purple, #816F7D);
+}
+
+.trial-buttons .active {
+  background: var(--Colors-Brand-Light-Purple, #EBE7E6);
+}
+
+.file-type-preview {
+  border-radius: 8px;
+  border: 1px solid #DFDFDF;
+}
+
+.pagination .page-item .page-link {
+  width: 3.5ch;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.log-table {
+  border: 1px solid #DFDFDF;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  text-align: left;
+  font-family: 'SF Pro';
+}
+
+.log-table th {
+  color: #816F7D;
+  font-weight: bold;
+}
+
+.log-table-border {
+  border: 1px solid #DFDFDF;
+  border-radius: 0.5rem;
+  margin-top: 5px;
+  margin-left: 0px;
+}
+
+.modals-content table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 3%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modals-content th,
+.modals-content td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.modal-row {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.element-col {
+  display: flex;
+}
+
+.created {
+  color: #20B962;
+  margin: auto 0;
+}
+
+.in-experiment {
+  color: #20B962;
+  margin: auto 0;
+}
+
+.complete {
+  color: #868686;
+  margin: auto 0;
+}
+
+.in-complete {
+  color: #FF9D13;
+  margin: auto 0;
+}
+
+.withdrawn {
+  color: #EF2C2C;
+  margin: auto 0;
+}
+
+.site-dropdown {
+  width: 250px !important;
+  height: 40px !important;
+  border: 1px solid #DFDFDF !important;
+  border-radius: 4px !important;
+  background: #FFFFFF !important;
+  color: #242424 !important;
+  font-size: 16px !important;
+  font-weight: 590 !important;
+  align-items: center !important;
+  display: flex !important;
+}
+
+.site-dropdown-toggle {
+  color: black !important;
+  font-family: 'SF Pro' !important;
+  font-size: 16px !important;
+  width: 250px !important;
+  height: 40px !important;
+  align-items: center !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  font-weight: 590 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.site-dropdown-toggle:hover,
+.site-dropdown-toggle:focus {
+  background-color: #f0f0f0 !important;
+}
+
+.site-dropdown-toggle:active {
+  background-color: #cbcbcb !important;
+}
+
+.site-dropdown-item {
+  font-family: 'SF Pro' !important;
+  font-size: 16px !important;
+  width: 250px !important;
+  height: 40px !important;
+  align-items: center !important;
+  display: flex !important;
+  color: black !important;
+}
+
+
+
+/* -------------------------- MODALS AND ALERTS  -------------------------- */
+
+
+
+.modals {
+  display: table;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modals-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.custom-alert-container {
+  padding: 12px 0px;
+}
+
+.custom-alert {
+  background: var(--status-status-red-faded, #FFE6E6);
+  border: 1px solid var(--status-status-red, #EF2C2C);
+  color: #EF2C2C;
+  position: relative;
+  padding: 8px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alert-message {
+  flex-grow: 1;
+}
+
+.custom-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+}
+
+.custom-close-button:hover,
+.custom-close-button:hover:active,
+.custom-close-button:hover:focus {
+  background-color: unset;
+  border-color: unset;
+}
+
+.custom-close-button img {
+  width: 20px;
+  height: 20px;
+}
+
+
+
+/*-------------------------- HOME, PROFILE, EXPERIMENT INSTRUCTIONS --------------------------*/
+
+
+
+.profile-image {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.profile-form-box {
+  background-color: #EBE7E6;
+}
+
+.account-save-button {
+  background-color: rgb(29, 9, 61);
+  color: #FFFFFF;
+  width: 160px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'SF Pro';
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.account-save-button:hover {
+  background-color: #EBE7E6;
+  color: #816F7D;
+}
+
+.account-save-button:disabled {
+  background-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.instructions-list .list-group-item {
+  border: none;
+  padding: 0;
+}
+
+.instructions-list-item {
+  margin-bottom: 20px;
+  list-style-type: decimal;
+  font-family: 'SF Pro';
+  font-size: 18px;
+}
+
+.irb-notice {
+  color: #816F7D;
+  font-weight: 590;
+}
+
+.home-label {
+  font-family: 'SF Pro';
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.home-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 360px;
+}
+
+.white-tooltip .tooltip-inner {
+  background-color: white !important;
+  color: #333 !important;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ddd;
+}
+
+.white-tooltip .tooltip-arrow::before {
+  border-right-color: white !important;
+  /* Match arrow to tooltip */
+}
+
+
+/* -------------------------- File Upload and Download -------------------------- */
+
+.upload-modal {
+  width: 100%;
+  max-width: 736px;
+}
+
+.fileUpload-component {
+  background-color: #EEE7ED;
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 311px;
+  overflow: auto;
+  margin-bottom: 20px;
+}
+
+.upload-card {
+  font-family: 'SF Pro';
+  font-size: 14px;
+  color: #644F64;
+  background-color: #EEE7ED;
+  border-radius: 8px;
+  padding: 12px;
+  max-width: 256px;
+  cursor: pointer;
+}
+
+.upload-card:hover {
+  outline: 2px solid #644F64;
+  outline-offset: -2px;
+}
+
+.upload-card-activated {
+  font-family: 'SF Pro';
+  font-size: 14px;
+  color: #242424;
+  background-color: #FEFEFE;
+  border-radius: 8px;
+  padding: 12px;
+  max-width: 256px;
+  cursor: pointer;
+}
+
+.upload-card-activated:hover {
+  outline: 2px solid #644F64;
+  outline-offset: -2px;
+}
+
+.notes-button {
+  max-height: 16px;
+  max-width: 16px;
+  height: auto;
+  width: auto;
+  margin-right: 8px;
+}
+
+.notes-button:hover {
+  cursor: pointer;
+  max-height: 16px;
+  max-width: 16px;
+  height: auto;
+  width: auto;
+  margin-right: 8px;
+}
+
+.upload-button {
+  max-width: 20px;
+  max-height: 20px;
+  height: auto;
+  width: auto;
+}
+
+.upload-button:hover {
+  cursor: pointer;
+  max-width: 20px;
+  max-height: 20px;
+  height: auto;
+  width: auto;
+}
+
+.file-row {
+  margin-bottom: 0;
+  white-space: pre;
+}
+
+.file-col {
+  overflow: auto;
+}
+
+.progress-bg {
+  width: 100%;
+  height: 100%;
+  border: 1px dotted;
+  border-color: #A9A9A9;
+  border-radius: 4px;
+
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background-color: #644F64;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.draganddrop {
+  font-family: 'SF Pro';
+  display: flex;
+  flex-direction: column;
+  background-color: #EEE7ED;
+  border: 1px;
+  border-style: dashed;
+  border-color: #A9A9A9;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 170px;
+}
+
+.draganddrop:hover {
+  font-family: 'SF Pro';
+  display: flex;
+  flex-direction: column;
+  background-color: #EEE7ED;
+  border: 1px;
+  border-style: dashed;
+  border-color: #A9A9A9;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 170px;
+  cursor: pointer;
+  outline: 2px solid #644F64;
+  outline-offset: -2px;
+}
+
+/* Fileversion dropdown - simplified unified styling */
+.fileversion-dropdown {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: auto;
+  min-width: 0px;
+  height: 44px;
+  display: inline-block;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fileversion-dropdown .btn,
+.fileversion-dropdown .btn-secondary,
+.fileversion-dropdown button {
+  background-color: #644F64;
+  color: #EBE7E6 !important;
+  border: none;
+  outline: none;
+  width: auto;
+  min-width: 200px;
+  height: 44px;
+  display: inline-block;
+  box-shadow: none;
+}
+
+/* Hover state for buttons only */
+.fileversion-dropdown .btn:hover,
+.fileversion-dropdown .btn-secondary:hover,
+.fileversion-dropdown button:hover {
+  background-color: #EBE7E6 !important;
+  color: #644F64 !important;
+  border: none;
+  outline: none;
+}
+
+/* Focus and active states for buttons only */
+.fileversion-dropdown .btn:focus,
+.fileversion-dropdown .btn:active,
+.fileversion-dropdown .btn-secondary:focus,
+.fileversion-dropdown .btn-secondary:active,
+.fileversion-dropdown button:focus,
+.fileversion-dropdown button:active {
+  background-color: #644F64 !important;
+  color: #EBE7E6 !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Text content styling */
+.fileversion-dropdown .dropdown-toggle-text,
+.fileversion-dropdown button span {
+  color: inherit !important;
+}
+
+/* Dropdown menu items */
+.fileversion-dropdown .dropdown-item {
+  color: #644F64;
+  background-color: white;
+}
+
+.fileversion-dropdown .dropdown-item:hover {
+  background-color: #EBE7E6;
+  color: #816F7D;
+}
+
+.fileversion-dropdown .dropdown-item.active,
+.fileversion-dropdown .dropdown-item:active {
+  background-color: #EBE7E6 !important;
+  color: #644F64 !important;
+}

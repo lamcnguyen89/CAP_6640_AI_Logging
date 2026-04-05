@@ -1,0 +1,94 @@
+version: "3.7"
+services:
+  nginx:
+    image: sh-nginx:prod
+    container_name: sh-nginx
+    user: root  # This ensures the container runs as root
+    build:
+      context: nginx
+      target: nginx-prod
+    depends_on: 
+      - api
+      - client
+    ports:
+      - 4001:80
+    volumes:
+      - "./nginx/nginx-azure.conf:/etc/nginx/conf.d/default.conf:delegated"
+      - "./static/:/var/www/static"
+
+  client:
+    image: sh-client:debug
+    container_name: sh-client
+    build:
+      context: client
+      target: debug
+    environment:
+      WATCHPACK_POLLING: "true"
+      PORT: "${PORT}"
+      VITE_PROTOCOL: "${VITE_PROTOCOL}"
+      VITE_DOMAIN: "${VITE_DOMAIN}"
+      MONGO_DOMAIN: "mongo"
+    volumes:
+      - "./client/src:/app/src:delegated"
+      - "./client/public:/app/public:delegated"
+      - "/app/node_modules"
+
+    command: [ "vite", "dev", "--host" ]  # Use Vite's dev command
+    depends_on: 
+      - api
+
+  mongo:
+    container_name: mongo
+    image: mongo:prod
+    restart: always
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - dbdata:/data/db
+      - ./mongo:/dbinit
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_AUTH_DB}
+
+  mongodb_backup:
+    image: mongo:prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_AUTH_DB}
+    depends_on:
+      - mongo
+    volumes:
+      - ./db_backups:/data/backup
+      - ./scripts/backup.sh:/backup.sh  # Mounts the script into the container
+    entrypoint: /bin/sh /backup.sh
+
+  api:
+    image: sh-api:debug
+    container_name: sh-api
+    build:
+      context: server
+      target: build
+    env_file: 
+     - ./.env
+     - ./sendgrid.env
+    environment:
+      PROTOCOL: "https"
+      MONGO_DB: ${MONGO_DB}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      MONGO_AUTH_DB: ${MONGO_AUTH_DB}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      DOMAIN: ${DOMAIN}
+      NODE_ENV: production
+    volumes:
+      - "./server/src:/usr/src:delegated"
+      - "./server/static:/usr/static:delegated"
+      - /usr/src/node_modules
+    command: [ "npm", "run", "debug" ]
+    restart: on-failure
+
+volumes:
+  dbdata:

@@ -1,0 +1,50 @@
+#settings-prjName{
+    margin-top: 5%;
+    margin-bottom: 4%;
+}
+
+.settings-card-body{
+    /* border: "5px solid black" !important; */
+    overflow: auto !important;
+    max-height: 50% !important;
+}
+
+.setting-content-listItems{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.delete-icon{
+    fill: #F0513E;
+    height: 25px;
+    width: 28px;
+}
+
+.delete-icon:hover{
+    fill: #F0513E;
+}
+
+.content-btn{
+    background: transparent;
+    border: none;
+    font-size: 25px;
+}
+
+.content-btn:hover{
+    color:#F0513E;
+}
+
+.content-btn:focus {
+    outline: none;
+}
+
+.content-btn:hover .content-btn-icon{
+    transform: scale(1.2)
+}
+
+.selectedVid{
+    border: solid 4px #76AD96 !important;
+}
+

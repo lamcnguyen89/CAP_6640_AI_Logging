@@ -1,0 +1,81 @@
+version: "3.9"
+services:
+  client:
+    image: sh-client:prod
+    container_name: sh-client
+    build:
+      context: client
+      target: client-prod
+
+    environment:
+      PORT: "80"
+      VITE_PROTOCOL: "https"
+      VITE_DOMAIN: "sherlock.gaim.ucf.edu"
+      MONGO_DOMAIN: "mongo"
+      # CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - 127.0.0.1:4001:80
+    depends_on: 
+      - api
+
+  api:
+    image: sh-api:prod
+    build:
+      context: server
+      target: api-prod
+    container_name: sh-api
+    environment:
+      NODE_APACHE_PASSWORD: "Basic "
+      PROTOCOL: "https"
+      MONGO_DB: ${MONGO_DB}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      MONGO_AUTH_DB: ${MONGO_AUTH_DB}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      DOMAIN: ${DOMAIN}
+      NODE_ENV: production
+    volumes:
+      - /usr/node_modules
+
+    command: ["node", "dist/server.js"]
+    depends_on: 
+      - mongo
+    restart: on-failure
+
+  mongo:
+    container_name: mongo
+    image: mongo:prod
+    restart: always
+    volumes:
+      - dbdata:/data/db
+      - ./mongo:/dbinit
+    build:
+      context: mongo
+      dockerfile: Dockerfile  
+
+    ports:
+      - 127.0.0.1:27018:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_ROOT_DATABASE: ${MONGO_AUTH_DB}
+    logging:
+      driver: none
+
+  mongodb_backup:
+    image: mongo:latest
+    depends_on:
+      - mongodb
+    volumes:
+      - ./db_backups:/data/backup
+    entrypoint: >
+      /bin/sh -c "
+      while true;
+      do
+        mongodump --host mongodb --out /data/backup/$(date +\%Y-\%m-\%d_\%H-\%M-\%S);
+        sleep 86400;
+      done"
+      
+volumes:
+  dbdata:

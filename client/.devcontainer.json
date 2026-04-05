@@ -1,0 +1,9 @@
+{
+  "name": "Client",
+  "dockerComposeFile": ["../docker-compose.dev.yml"],
+  "service": "client",
+  "shutdownAction": "none",
+  "extensions": [],
+  // Open the sub-folder with the source code
+  "workspaceFolder": "/app/"
+}

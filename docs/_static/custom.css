@@ -1,0 +1,101 @@
+/* Main page background */
+body {
+  background-color: #160335;
+  color: #ffffff;
+}
+
+/* Main content background */
+div.document {
+  background-color: #160335;
+  color: #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+}
+ 
+/* Headings */
+h1, h2, h3, h4 {
+  color: #f9f9f9;
+}
+ 
+/* Sidebar links */
+div.sphinxsidebarwrapper a {
+  color: #ffffff;
+}
+ 
+div.sphinxsidebarwrapper a:hover {
+  color: #ffd700;
+}
+
+/* Top navigation bar */
+div.related {
+  background-color: #816F7D;
+}
+ 
+/* Links in the top bar */
+div.related a {
+  color: #ffffff;
+  text-decoration: none;
+}
+ 
+/* Hover effects */
+div.related a:hover {
+  color: #ffd700;  /* Gold or highlight color */
+  text-decoration: underline;
+}
+
+/* Lists and list spacing */
+ol li,
+ul li,
+dl dt,
+dl dd {
+  margin-bottom: 6px !important;
+}
+
+/* Reset any default padding that might interfere with spacing */
+ol, ul, dl {
+  padding-left: 1.5em;
+}
+
+/* Ensure consistent spacing for all list types including Sphinx-generated classes */
+.simple li,
+.compact li,
+ol.arabic li,
+ol.upperalpha li,
+ol.loweralpha li,
+ol.upperroman li,
+ol.lowerroman li,
+ul.square li,
+ul.circle li,
+ul.disc li {
+  margin-bottom: 6px !important;
+  padding-bottom: 0;
+}
+
+/* Maintain proper list-style for numbered lists */
+ol.arabic {
+  list-style-type: decimal;
+}
+
+/* Ensure nested lists also follow the same spacing rules */
+li ol li,
+li ul li,
+li dl dt,
+li dl dd {
+  margin-bottom: 6px !important;
+}
+
+/* Add top margin to nested lists to create space from parent item */
+li ol,
+li ul,
+li dl {
+  margin-top: 6px !important;
+}
+
+/* Ensure first nested list item has proper spacing */
+li ol li:first-child,
+li ul li:first-child,
+li dl dt:first-child,
+li dl dd:first-child {
+  margin-top: 6px !important;
+}
+

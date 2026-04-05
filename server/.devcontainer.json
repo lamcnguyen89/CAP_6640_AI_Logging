@@ -1,0 +1,8 @@
+{
+  "name": "Server",
+  "dockerComposeFile": ["../docker-compose.dev.yml"],
+  "service": "api",
+  "shutdownAction": "none",
+  "extensions": [],
+  "workspaceFolder": "/usr/src/"
+}

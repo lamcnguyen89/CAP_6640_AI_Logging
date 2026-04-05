@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "downlevelIteration": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "strictNullChecks": false,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "allowJs": true
+  },
+  "include": [
+    "src",
+    "src/types",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_moudles",
+    "dist"
+  ],
+  "typeRoots": [
+    "src/types/index.d.ts",
+    "node_modules/@types"
+  ]
+}

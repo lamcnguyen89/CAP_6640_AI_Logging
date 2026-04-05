@@ -1,0 +1,68 @@
+services:
+  client:
+    image: sh-client:client-prod  # Specify the client-prod stage explicitly
+    ports:
+      - 4001:80
+    container_name: sh-client
+    restart: always
+    build:
+      context: client
+      target: client-prod
+    environment:
+      VITE_PROTOCOL: "${VITE_PROTOCOL}"
+      VITE_DOMAIN: "${VITE_DOMAIN}"
+      MONGO_DOMAIN: "mongo"
+    volumes:
+      - "./static:/app/static:delegated"
+    depends_on:
+      - api
+
+  mongo:
+    container_name: mongo
+    image: mongo:prod
+    restart: always
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - dbdata:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_AUTH_DB}
+
+  api:
+    image: sh-api:api-prod  # Use a pre-built production image
+    container_name: sh-api
+    build:
+      context: server
+      target: api-prod
+    env_file:
+      - ./.env
+      - ./sendgrid.env
+    environment:
+      PROTOCOL: "https"
+      MONGO_DB: ${MONGO_DB}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      MONGO_AUTH_DB: ${MONGO_AUTH_DB}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      DOMAIN: ${DOMAIN}
+      NODE_ENV: production
+    restart: on-failure
+
+  mongodb_backup:
+    image: mongo:prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_AUTH_DB}
+    depends_on:
+      - mongo
+    volumes:
+      - ./db_backups:/data/backup
+      - ./scripts/backup.sh:/backup.sh  # Mounts the script into the container
+    entrypoint: /bin/sh /backup.sh
+
+volumes:
+  dbdata:

@@ -1,0 +1,117 @@
+services:
+  nginx:
+    image: sh-nginx:debug
+    container_name: sh-nginx
+    build:
+      context: nginx
+      target: nginx-dev
+    depends_on:
+      - api
+      - client
+    ports:
+      - "4000:80"
+    volumes:
+      - "./nginx/nginx-dev.conf:/etc/nginx/conf.d/default.conf"
+      - "./static/:/usr/share/nginx/static:delegated" # Updated path
+      - "./server/uploads/webxr:/usr/share/nginx/webxr:ro"
+  client:
+    image: sh-client:debug
+    container_name: sh-client
+    depends_on:
+      - api
+    build:
+      context: client
+      target: debug
+    environment:
+      NODE_ENV: development
+      VITE_PROTOCOL: "${VITE_PROTOCOL}"
+      VITE_DOMAIN: "${VITE_DOMAIN}"
+      MONGO_DOMAIN: "mongo"
+      WATCHPACK_POLLING: "true"
+      VITE_BASE_URL: "${BASE_URL}"
+      VITE_DROPBOX_CLIENT_ID: "${DROPBOX_CLIENT_ID}"
+      DROPBOX_CLIENT_SECRET: "${DROPBOX_CLIENT_SECRET}"
+      DROPBOX_ACCESS_TOKEN: "${DROPBOX_ACCESS_TOKEN}"
+
+    volumes:
+      - "./client/src:/app/src:delegated"
+      - "./client/tests:/app/tests:delegated"
+      - "./client/index.html:/app/index.html:delegated"
+      - "./client/.eslint.js:/app/.eslint.js:delegated"
+      - "./client/tsconfig.json:/app/tsconfig.json:delegated"
+      - "./client/package.json:/app/package.json:delegated"
+      - "./client/jest.config.cjs:/app/jest.config.cjs:delegated"
+      - "./client/vite.config.ts:/app/vite.config.ts:delegated"
+      - "./client/public:/app/public:delegated"
+    command: ["vite", "dev", "--host"] # Use Vite's dev command
+
+  api:
+    image: sh-api:debug
+    container_name: sh-api
+    build:
+      context: server
+      target: build
+    env_file: ./.env
+    environment:
+      NODE_APACHE_PASSWORD: "Basic "
+      PROTOCOL: "http"
+      MODE: "development"
+    volumes:
+      - "./server/src:/usr/src:delegated"
+      - "./server/tests:/usr/tests:delegated"
+      - "./server/uploads:/usr/uploads:delegated"
+      - "./server/jest.config.js:/usr/jest.config.js:delegated"
+    command: ["npm", "run", "debug"]
+    ports:
+      - "9230:9230" # Debug port for Node.js
+    restart: on-failure
+    depends_on:
+      - mongo
+      - mongo-logs
+
+  mongo:
+    container_name: mongo
+    image: mongo:prod
+    build:
+      context: mongo
+    restart: always
+    volumes:
+      - db-data:/data/db
+      - ./mongo/sherlock-insert.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "127.0.0.1:27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_AUTH_DB}
+    logging:
+      driver: "none"
+
+  mongo-logs:
+    container_name: mongo-logs
+    image: mongo:latest
+    build:
+      context: mongo
+    restart: always
+    volumes:
+      - logs-db-data:/data/db
+      - ./mongo/mongo-init-logs.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOGS_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_LOGS_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_LOGS_DB}
+    logging:
+      driver: "none"
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - "1025:1025" # SMTP interface
+      - "8025:8025" # Web interface for Mailhog
+
+volumes:
+  db-data: null
+  logs-db-data: null
