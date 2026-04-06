@@ -10,7 +10,10 @@ import {
   Modal,
 } from "react-bootstrap";
 import "../../styles/App.css";
-import { generateShortCode, getWebxrPaths } from "../../helpers/ExperimentApiHelper";
+import {
+  generateShortCode,
+  getWebxrPaths,
+} from "../../helpers/ExperimentApiHelper";
 import { Link } from "react-router-dom";
 
 // Props
@@ -39,12 +42,24 @@ const WebXRLinkDisplay: React.FC<WebXRLinkDisplayProps> = ({
   // Effect to get the WebXR info for the experiment
   useEffect(() => {
     const fetchWebXRInfo = async () => {
-      console.log(sites);
       if (experimentIdToEdit) {
-        const webXRPaths = await getWebxrPaths(auth.token, experimentIdToEdit);
-        if (webXRPaths && webXRPaths.httpStatus === 200) {
-          setWebXRExists(true);
-        } else {
+        try {
+          const webXRPaths = await getWebxrPaths(
+            auth.token,
+            experimentIdToEdit,
+          );
+          if (webXRPaths && webXRPaths.httpStatus === 200) {
+            setWebXRExists(true);
+            return;
+          }
+
+          // A 404 here means the experiment has no WebXR build yet.
+          setWebXRExists(false);
+        } catch (error: any) {
+          if (error?.httpStatus === 404 || error?.status === 404) {
+            setWebXRExists(false);
+            return;
+          }
           setWebXRExists(false);
         }
       } else {
@@ -204,13 +219,18 @@ const WebXRLinkDisplay: React.FC<WebXRLinkDisplayProps> = ({
             </div>
           ) : shortUrl ? (
             <div className="text-center">
-              <p>Below is your short URL. This URL is a one-time-use URL, which will redirect you to your experiment's long URL:</p>
+              <p>
+                Below is your short URL. This URL is a one-time-use URL, which
+                will redirect you to your experiment's long URL:
+              </p>
               <p>
                 <strong>{`${window.location.origin}/vera-portal/s/${shortUrl}`}</strong>
               </p>
               <Button
                 onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/vera-portal/s/${shortUrl}`);
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}/vera-portal/s/${shortUrl}`,
+                  );
                 }}
                 className="me-2"
               >
@@ -228,16 +248,17 @@ const WebXRLinkDisplay: React.FC<WebXRLinkDisplayProps> = ({
           ) : (
             <div>
               <p>
-                When entering your experiment's long URL is too cumbersome (such as
-                when using a VR browser), you can instead generate a short URL which
-                can be used to access your experiment's long URL.
+                When entering your experiment's long URL is too cumbersome (such
+                as when using a VR browser), you can instead generate a short
+                URL which can be used to access your experiment's long URL.
               </p>
               <p>
-                Once you use your short URL, you will be redirected to the long URL
-                for your experiment's WebXR build. You can then bookmark this URL
-                for future use. Once you use the short URL, it will become invalid
-                and cannot be used again. Short URLs also expire after 1 hour of
-                inactivity. You can generate a new short URL at any time.
+                Once you use your short URL, you will be redirected to the long
+                URL for your experiment's WebXR build. You can then bookmark
+                this URL for future use. Once you use the short URL, it will
+                become invalid and cannot be used again. Short URLs also expire
+                after 1 hour of inactivity. You can generate a new short URL at
+                any time.
               </p>
               {isMultiSite && effectiveSites.length > 1 ? (
                 <div>

@@ -16,7 +16,7 @@ export function createExperiment(
   conditions: ConditionGroup[],
   isMultiSite: boolean,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   // Create Empty FormData Object and append fields to it
   const data = new FormData();
@@ -32,7 +32,7 @@ export function createExperiment(
       collaborators: collaborators,
       conditions: conditions,
       isMultiSite: isMultiSite,
-    })
+    }),
   ); // Upload other types of data
 
   // Add Experiment Files to the formdata object
@@ -67,7 +67,7 @@ export function copyExperiment(
   collaborators: string[],
   isMultiSite: boolean,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   // Create Empty FormData Object and append fields to it
   const data = new FormData();
@@ -83,7 +83,7 @@ export function copyExperiment(
       irbEmailAddress: irbEmailAddress,
       collaborators: collaborators,
       isMultiSite: isMultiSite,
-    })
+    }),
   ); // Upload other types of data
 
   // Add Experiment Files to the formdata object
@@ -111,7 +111,7 @@ export function copyExperiment(
 export async function addCollaboratorToExperiment(
   experimentId: string,
   email: string,
-  authToken: string
+  authToken: string,
 ) {
   try {
     const response = await fetch(
@@ -127,7 +127,7 @@ export async function addCollaboratorToExperiment(
         body: JSON.stringify({
           userEmail: email,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -143,7 +143,7 @@ export async function addCollaboratorToExperiment(
 export async function removeCollaboratorFromExperiment(
   experimentId: string,
   collaboratorId: string,
-  authToken: string
+  authToken: string,
 ) {
   try {
     const response = await fetch(
@@ -156,7 +156,7 @@ export async function removeCollaboratorFromExperiment(
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -172,7 +172,7 @@ export async function removeCollaboratorFromExperiment(
 export async function updateCollaborators(
   experimentId: string,
   collaborators: Collaborator[],
-  authToken: string
+  authToken: string,
 ) {
   try {
     const response = await fetch(
@@ -188,7 +188,7 @@ export async function updateCollaborators(
         body: JSON.stringify({
           collaborators: collaborators,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -203,7 +203,7 @@ export async function updateCollaborators(
 // Gets the current user's permission role for an experiment
 export async function getUserExperimentPermission(
   experimentId: string,
-  authToken: string
+  authToken: string,
 ): Promise<{ success: boolean; permissionRole: string; isCreator: boolean }> {
   try {
     const response = await fetch(
@@ -216,7 +216,7 @@ export async function getUserExperimentPermission(
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -231,7 +231,7 @@ export async function getUserExperimentPermission(
 // Gets the creator of the experiment
 export async function getExperimentCreator(
   experimentId: string,
-  authToken: string
+  authToken: string,
 ): Promise<{ success: boolean; creator: User }> {
   try {
     const response = await fetch(
@@ -242,7 +242,7 @@ export async function getExperimentCreator(
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -267,7 +267,7 @@ export function updateExperiment(
   isMultiSite: boolean,
   authToken: string,
   onSuccess: any,
-  onError: any
+  onError: any,
 ) {
   // Create Empty FormData Object and append fields to it
   const data = new FormData();
@@ -283,7 +283,7 @@ export function updateExperiment(
       removeIrbLetter: removeIrbLetter,
       conditions: conditions,
       isMultiSite: isMultiSite,
-    })
+    }),
   ); // Upload other types of data
 
   // Add Experiment Files to the formdata object
@@ -318,7 +318,7 @@ export function createDraft(
   conditions: ConditionGroup[],
   isMultiSite: boolean,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   // Create Empty FormData Object and append fields to it
   const data = new FormData();
@@ -334,7 +334,7 @@ export function createDraft(
       collaborators: collaborators,
       conditions: conditions,
       isMultiSite: isMultiSite,
-    })
+    }),
   ); // Upload other types of data
 
   // Add Experiment Files to the formdata object
@@ -371,7 +371,7 @@ export function updateDraft(
   isMultiSite: boolean,
   authToken: string,
   actingFunction: any,
-  onError: any
+  onError: any,
 ) {
   // Create Empty FormData Object and append fields to it
   const data = new FormData();
@@ -387,7 +387,7 @@ export function updateDraft(
       collaborators: collaborators,
       conditions: conditions,
       isMultiSite: isMultiSite,
-    })
+    }),
   ); // Upload other types of data
 
   // Add Experiment Files to the formdata object
@@ -401,7 +401,7 @@ export function updateDraft(
         Authorization: authToken,
       },
       body: data,
-    }
+    },
   )
     .then(async (response) => {
       const data = await response.json();
@@ -420,7 +420,7 @@ export async function uploadWebxrZip(
   authToken,
   experimentId: string,
   webxrZip: File,
-  onUploadProgress: (progressEvent: ProgressEvent) => void
+  onUploadProgress: (progressEvent: ProgressEvent) => void,
 ) {
   try {
     const formData = new FormData();
@@ -435,7 +435,7 @@ export async function uploadWebxrZip(
           Authorization: authToken,
         },
         onUploadProgress: onUploadProgress,
-      }
+      },
     );
 
     return response;
@@ -446,7 +446,7 @@ export async function uploadWebxrZip(
 }
 
 // Gets webxr experience path infos
-export async function getWebxrPaths(authToken, experimentId: string) {
+export async function getWebxrPaths(authToken: string, experimentId: string) {
   try {
     const response = await fetch(
       `${
@@ -458,10 +458,25 @@ export async function getWebxrPaths(authToken, experimentId: string) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
-    const data = await response.json();
+    if (response.status === 404) {
+      return {
+        success: false,
+        message: "WebXR build paths not found.",
+        httpStatus: 404,
+      };
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+    const data = contentType.includes("application/json")
+      ? await response.json()
+      : {
+          success: false,
+          message: await response.text(),
+        };
+
     data.httpStatus = response.status;
     return data;
   } catch (error) {
@@ -477,16 +492,19 @@ export async function generateShortCode(
   siteId?: string,
 ) {
   try {
-    const response = await fetch(`${import.meta.env.BASE_URL}/api/experiments/${experimentId}/webxr/shortcode`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
+    const response = await fetch(
+      `${import.meta.env.BASE_URL}/api/experiments/${experimentId}/webxr/shortcode`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+        body: JSON.stringify({
+          siteId: siteId ?? null,
+        }),
       },
-      body: JSON.stringify({
-        siteId: siteId ?? null,
-      }),
-    });
+    );
 
     const data = await response.json();
     data.httpStatus = response.status;
@@ -498,15 +516,16 @@ export async function generateShortCode(
 }
 
 // Gets a short code; consumes code on use
-export async function getShortCode(
-  shortCode: string,
-) {
+export async function getShortCode(shortCode: string) {
   try {
-    const response = await axios.get(`${import.meta.env.BASE_URL}/api/experiments/webxr/shortcode/${shortCode}`, {
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axios.get(
+      `${import.meta.env.BASE_URL}/api/experiments/webxr/shortcode/${shortCode}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     return response;
   } catch (error) {
@@ -526,7 +545,7 @@ export async function getAllExperiments(authToken) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -556,7 +575,7 @@ export async function getExperiment(expId, authToken, onSuccess) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -585,7 +604,7 @@ export async function getExperimentAlternate(expId, authToken) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -606,7 +625,7 @@ export async function getExperimentFullRes(expId, authToken) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -622,7 +641,7 @@ export async function getExperimentFullRes(expId, authToken) {
 export function deleteExperiment(
   experimentId: string,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   fetch(`${import.meta.env.BASE_URL}/api/experiments/${experimentId}`, {
     method: "DELETE",
@@ -645,7 +664,7 @@ export async function downloadData(
   experimentId: any,
   authToken: string,
   onError,
-  onSuccess
+  onSuccess,
 ) {
   return fetch(
     `${import.meta.env.BASE_URL}/api/experiments/${experimentId}/zip`,
@@ -655,7 +674,7 @@ export async function downloadData(
         "Content-Type": "application/json",
         Authorization: authToken,
       },
-    }
+    },
   )
     .then((res) => res.json())
     .then((res) => {
@@ -668,7 +687,7 @@ export async function downloadData(
         const dataFieldsSet = new Set();
         allLogs.forEach((log) => {
           Object.keys(log.data || {}).forEach((field) =>
-            dataFieldsSet.add(field)
+            dataFieldsSet.add(field),
           );
         });
         const dataFields = Array.from(dataFieldsSet);
@@ -740,7 +759,7 @@ export async function getSite(siteId, authToken) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -756,7 +775,7 @@ export async function createSite(
   name: string,
   shortName: string,
   parentExperiment: string,
-  authToken: string
+  authToken: string,
 ) {
   try {
     const response = await fetch(`${import.meta.env.BASE_URL}/api/sites/`, {
@@ -786,7 +805,7 @@ export async function updateSite(
   siteId: string,
   name: string,
   shortName: string,
-  authToken: string
+  authToken: string,
 ) {
   try {
     const response = await fetch(
@@ -801,7 +820,7 @@ export async function updateSite(
           name: name,
           shortName: shortName,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -824,7 +843,7 @@ export async function deleteSite(siteId: string, authToken: string) {
           "Content-Type": "application/json",
           Authorization: authToken,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -841,7 +860,7 @@ export function addSiteToExperiment(
   experimentId: string,
   siteId: string,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   return fetch(
     `${import.meta.env.BASE_URL}/api/experiments/${experimentId}/sites`,
@@ -854,7 +873,7 @@ export function addSiteToExperiment(
       body: JSON.stringify({
         siteId: siteId,
       }),
-    }
+    },
   )
     .then(async (response) => {
       const data = await response.json();
