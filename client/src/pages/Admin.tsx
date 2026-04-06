@@ -116,25 +116,44 @@ function ParticipantTable({ columns, data }) {
   return (
     <Table {...getTableProps()} className="results-table">
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>
-                {column.render("Header")}
-                <div>{column.canFilter ? column.render("Filter") : null}</div>
-              </th>
-            ))}
-          </tr>
-        ))}
+        {headerGroups.map((headerGroup) => {
+          const { key: headerGroupKey, ...headerGroupProps } =
+            headerGroup.getHeaderGroupProps();
+
+          return (
+            <tr key={headerGroupKey} {...headerGroupProps}>
+              {headerGroup.headers.map((column) => {
+                const { key: columnKey, ...columnProps } =
+                  column.getHeaderProps();
+
+                return (
+                  <th key={columnKey} {...columnProps}>
+                    {column.render("Header")}
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                );
+              })}
+            </tr>
+          );
+        })}
       </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map((row) => {
           prepareRow(row);
+          const { key: rowKey, ...rowProps } = row.getRowProps();
+
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-              ))}
+            <tr key={rowKey} {...rowProps}>
+              {row.cells.map((cell) => {
+                const { key: cellKey, ...cellProps } = cell.getCellProps();
+                return (
+                  <td key={cellKey} {...cellProps}>
+                    {cell.render("Cell")}
+                  </td>
+                );
+              })}
             </tr>
           );
         })}
