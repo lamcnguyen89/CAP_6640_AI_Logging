@@ -1,25 +1,21 @@
-
-import axios from "axios"
+import axios from "axios";
 
 // Dispatches a request to get the admin status of a user; returns the response json.
-export function getAdminStatus(
-  userid: string,
-  authToken: string
-) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/users/${userid}/checkadmin`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    }
-  )
+export function getAdminStatus(userid: string, authToken: string) {
+  return fetch(`${import.meta.env.BASE_URL}/api/users/${userid}/checkadmin`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+  })
     .then(async (res) => {
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({})); // Handle cases where no JSON is returned
-        throw { status: res.status, message: errorData.message || "An error occurred" };
+        throw {
+          status: res.status,
+          message: errorData.message || "An error occurred",
+        };
       }
       return res.json();
     })
@@ -30,35 +26,36 @@ export function getAdminStatus(
 }
 
 // Dispatches a request to get all users; returns the response json.
-export function getAllUsers(
-  authToken: string
-) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/users/getallusers`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      }
-    }
-  )
+export function getAllUsers(authToken: string) {
+  return fetch(`${import.meta.env.BASE_URL}/api/users/getallusers`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+  })
     .then((res) => res.json())
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 }
 
 // Gets users by search criteria
-export async function getUsersBySearch(searchCriteria: string, authToken: string) {
+export async function getUsersBySearch(
+  searchCriteria: string,
+  authToken: string,
+) {
   try {
-    const response = await fetch(`${import.meta.env.BASE_URL}/api/users?search=${searchCriteria}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
+    const response = await fetch(
+      `${import.meta.env.BASE_URL}/api/users?search=${searchCriteria}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
       },
-    });
+    );
     const data = await response.json();
     data.httpStatus = response.status;
     return data;
@@ -74,35 +71,46 @@ export function deleteUser(
   userId: string,
   authToken: string,
 ) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/users/${userId}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      }
-    }
-  )
+  return fetch(`${import.meta.env.BASE_URL}/api/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+  })
     .then((res) => res.json())
     .then((res) => {
       if (res.success) {
-        console.log(res)
+        console.log(res);
       } else {
         // throw error
-        throw res
+        throw res;
       }
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
+}
+
+// Dispatches a request to log out a user; returns the response json.
+export function logoutUser(authToken: string) {
+  return fetch(`${import.meta.env.BASE_URL}/api/users/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log("Error during logout:", err);
+      // Don't throw error - logout should succeed even if API call fails
+      return { success: false, error: err };
+    });
 }
 
 // Dispatches a request to get the status of a user's token; returns the response json.
-export function getTokenStatus(
-  userId: string,
-  token: string,
-) {
+export function getTokenStatus(userId: string, token: string) {
   return fetch(
     `${import.meta.env.BASE_URL}/api/users/${userId}/checktoken/${token}`,
     {
@@ -110,22 +118,16 @@ export function getTokenStatus(
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   )
     .then((res) => res.json())
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 }
 
 // Dispatches a request to reset a user's password; returns the response json.
-export function resetPassword(
-
-  userId: string,
-  password: string,
-  token: string
-
-) {
+export function resetPassword(userId: string, password: string, token: string) {
   return fetch(
     `${import.meta.env.BASE_URL}/api/users/${userId}/resetpassword`,
     {
@@ -136,14 +138,14 @@ export function resetPassword(
       body: JSON.stringify({
         userId: userId,
         password: password,
-        token: token
+        token: token,
       }),
-    }
+    },
   )
     .then((res) => res.json())
     .catch((err) => {
-      throw err
-    })
+      throw err;
+    });
 }
 
 // Dispatches a request to get a user's profile; returns the response json.
@@ -153,18 +155,18 @@ export function getUserProfile(authToken: string) {
     headers: {
       "Content-Type": "application/json",
       Authorization: authToken,
-    }
+    },
   })
     .then((res) => {
       if (!res.ok && res.status >= 500) {
-        throw new Error('Server Error. Please try reloading the page.');
+        throw new Error("Server Error. Please try reloading the page.");
       }
       return res.json();
     })
     .catch((err) => {
       console.error(err);
       throw err; // Rethrowing the error so it can be caught in the component where getUserProfile is called.
-    })
+    });
 }
 
 // Dispatches a request to update a user's profile; returns the response json.
@@ -179,40 +181,37 @@ export function updateUserProfile(
   profileImage: string,
   authToken: string,
   onSuccess: any,
-  onError: any
+  onError: any,
 ) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/users/`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        institutionId: institutionId,
-        labId: labId,
-        currentPassword: currentPassword,
-        password: password,
-        profileImage: profileImage
-      }),
-    }
-  )
+  return fetch(`${import.meta.env.BASE_URL}/api/users/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+    body: JSON.stringify({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      institutionId: institutionId,
+      labId: labId,
+      currentPassword: currentPassword,
+      password: password,
+      profileImage: profileImage,
+    }),
+  })
     .then((res) => res.json())
     .then((res) => {
       if (res && res.success) {
-        onSuccess(res)
+        onSuccess(res);
       } else {
         // throw error
-        onError(res)
+        onError(res);
       }
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 }
 
 // Dispatches a request to invite a new user; returns the response json.
@@ -222,42 +221,39 @@ export function inviteUser(
   email: string,
   authToken: string,
 ) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/users/invitenewuser`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-      }),
-    }
-  )
+  return fetch(`${import.meta.env.BASE_URL}/api/users/invitenewuser`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+    body: JSON.stringify({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+    }),
+  })
     .then((res) => res.json())
     .then((res) => {
       if (res.success) {
         // user successfully added an experiment, add this to experiment array
-        console.log("User invited")
+        console.log("User invited");
       } else {
         // throw error
-        throw res
+        throw res;
       }
     })
     .catch((err) => {
       // experiment not added. Show error message
-      console.log(err)
-    })
+      console.log(err);
+    });
 }
 
 // Dispatches a request to get a collaborator; then calls an acting function.
 export function getCollaborators(
   experimentId: string,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   fetch(
     `${import.meta.env.BASE_URL}/api/experiments/${experimentId}/collaborators`,
@@ -266,20 +262,20 @@ export function getCollaborators(
       headers: {
         "Content-Type": "application/json",
         Authorization: authToken,
-      }
-    }
+      },
+    },
   )
     .then((res) => res.json())
     .then((res) => {
       // console.log(res);
       if (res.success) {
         // if succesful set the parent state with the collaborators
-        actingFunction(res.collaborators)
-      } else throw res
+        actingFunction(res.collaborators);
+      } else throw res;
     })
     .catch((res) => {
-      console.log(res)
-    })
+      console.log(res);
+    });
 }
 
 // Dispatches a request to add a collaborator; then calls an acting function.
@@ -287,7 +283,7 @@ export function addCollaborator(
   prjId: string,
   email: string,
   authToken: string,
-  actingFunction: any
+  actingFunction: any,
 ) {
   // add a new collaborator to the list
   return fetch(
@@ -301,35 +297,29 @@ export function addCollaborator(
       body: JSON.stringify({
         email: email,
       }),
-    }
+    },
   )
     .then((res) => res.json())
     .then((res) => {
       // if successful add re-load users from the DB
-      actingFunction()
+      actingFunction();
     })
     .then((res: any) => {
-      console.log(res)
+      console.log(res);
       if (res && res.success) {
-        return res.user
-      } else throw res
+        return res.user;
+      } else throw res;
     })
     .catch((res) => {
-      console.log(res)
-      return null
-    })
+      console.log(res);
+      return null;
+    });
 }
 
-
 // Function to verify user email
-export function verifyEmailURL(
-  id: string,
-  token: string,
-) {
-
-  return axios.patch(
-    `${import.meta.env.BASE_URL}/api/email/${id}/verify/${token}`,
-  )
+export function verifyEmailURL(id: string, token: string) {
+  return axios
+    .patch(`${import.meta.env.BASE_URL}/api/email/${id}/verify/${token}`)
     .then((response) => {
       console.log(response.data);
       return response.data;
@@ -347,8 +337,8 @@ export function dropboxConnect(userId: string) {
   const apiBase = import.meta.env.VITE_BASE_URL; // The Base URL of this application
 
   // Validation to check if environmental variables exist
-  console.log("Client ID: ", clientId)
-  console.log("Base URL:", apiBase)
+  console.log("Client ID: ", clientId);
+  console.log("Base URL:", apiBase);
   if (!clientId || !apiBase) {
     console.error("Missing DROPBOX_CLIENT_ID or API_BASE_URL");
     return;
@@ -364,31 +354,26 @@ export function dropboxConnect(userId: string) {
     state, // Security token to validate later
   });
 
-
-  // Window.location.href sets the browser URL to this address and reloads the page. 
+  // Window.location.href sets the browser URL to this address and reloads the page.
   // This temporary redirect takes the user to Dropbox authentication page to make sure that the user and web application is authorized to access the Dropbox app.
   // After Authorization, user will be redirected back to  redirectURI which is a callback that does something...?
-  window.location.href =
-    `https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
+  window.location.href = `https://www.dropbox.com/oauth2/authorize?${params.toString()}`;
 }
 
 // Function to unlink dropbox by deleting token
 export function unlinkDropbox(authToken, actingFunction: any) {
-  return fetch(
-    `${import.meta.env.BASE_URL}/api/dropbox/account`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    }
-  )
+  return fetch(`${import.meta.env.BASE_URL}/api/dropbox/account`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+  })
     .then((res) => res.json())
     .then((res) => {
-      actingFunction(res)
+      actingFunction(res);
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 }

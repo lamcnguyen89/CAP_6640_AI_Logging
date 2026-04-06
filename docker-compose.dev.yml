@@ -60,6 +60,7 @@ services:
       - "./server/src:/usr/src:delegated"
       - "./server/tests:/usr/tests:delegated"
       - "./server/uploads:/usr/uploads:delegated"
+      - "./server/logs:/usr/logs:delegated"
       - "./server/jest.config.js:/usr/jest.config.js:delegated"
     command: ["npm", "run", "debug"]
     ports:

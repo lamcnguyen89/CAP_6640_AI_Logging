@@ -47,12 +47,7 @@ class Logger {
           format: "YYYY-MM-DD HH:mm:ss",
         }),
         winston.format.errors({ stack: true }), // Include stack trace for errors
-        winston.format.printf(({ level, message, timestamp, stack }) => {
-          if (stack) {
-            return `${timestamp} [${level.toUpperCase()}]: ${message}\n${stack}`;
-          }
-          return `${timestamp} [${level.toUpperCase()}]: ${message}`;
-        }),
+        winston.format.json(), // JSON format for AI parsing and structured logging
       ),
       transports: this.getTransports(),
       silent: this.isTestMode, // Silence all logs during testing
@@ -158,50 +153,43 @@ class Logger {
   }
 
   /*
-    1.  Message formatting  methods for different log levels
-    2. These methods call the winston logger constructor and based on the log level, it will format the message and send it to the apppriate transport (i.e to the console, to a file and/or cloud service)
+    Structured logging methods for different log levels
+    These methods accept a message string and optional metadata object.
+    Metadata fields will appear as separate JSON properties in the log output.
+    Example: logger.info('User logged in', { userId: '123', email: 'user@example.com' })
+    Output: { "timestamp": "...", "level": "info", "message": "User logged in", "userId": "123", "email": "user@example.com" }
   */
 
-  // Log method for an error message: Example usage: logger.error('An error occurred', error)
-  error(message: string, ...args: any[]): void {
-    this.winstonLogger.error(this.formatMessage(message, args));
+  // Log method for an error message
+  // Example: logger.error('Database query failed', { userId: '123', query: 'SELECT * FROM users' })
+  error(message: string, meta?: Record<string, any>): void {
+    this.winstonLogger.error(message, meta || {});
   }
 
-  // Log method for a warning message: Example usage: logger.warn('This is a warning', warning)
-  warn(message: string, ...args: any[]): void {
-    this.winstonLogger.warn(this.formatMessage(message, args));
+  // Log method for a warning message
+  // Example: logger.warn('API rate limit approaching', { remaining: 10, limit: 100 })
+  warn(message: string, meta?: Record<string, any>): void {
+    this.winstonLogger.warn(message, meta || {});
   }
 
-  // Log method for an informational message: Example usage: logger.info('Information message', info)
-  info(message: string, ...args: any[]): void {
-    this.winstonLogger.info(this.formatMessage(message, args));
+  // Log method for an informational message
+  // Example: logger.info('User logged in', { userId: '123', email: 'user@example.com' })
+  info(message: string, meta?: Record<string, any>): void {
+    this.winstonLogger.info(message, meta || {});
   }
 
-  // Log method for an HTTP request message: Example usage: logger.http('HTTP request received', req)
-  debug(message: string, ...args: any[]): void {
-    this.winstonLogger.debug(this.formatMessage(message, args));
+  // Log method for debug messages
+  // Example: logger.debug('Processing request', { method: 'GET', path: '/api/users' })
+  debug(message: string, meta?: Record<string, any>): void {
+    this.winstonLogger.debug(message, meta || {});
   }
 
-  // Log method for verbose messages: Example usage: logger.verbose('Verbose message', verboseInfo)
   // Special method for system startup messages (always shown except in tests)
-  system(message: string, ...args: any[]): void {
+  // Example: logger.system('Server started', { port: 3000, env: 'development' })
+  system(message: string, meta?: Record<string, any>): void {
     if (!this.isTestMode) {
-      this.winstonLogger.info(`[SYSTEM] ${this.formatMessage(message, args)}`);
+      this.winstonLogger.info(`[SYSTEM] ${message}`, meta || {});
     }
-  }
-
-  // Formats the message with additional arguments
-  private formatMessage(message: string, args: any[]): string {
-    if (args.length > 0) {
-      // Handle objects and arrays properly
-      const formattedArgs = args
-        .map((arg) =>
-          typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg),
-        )
-        .join(" ");
-      return `${message} ${formattedArgs}`;
-    }
-    return message;
   }
 }
 
