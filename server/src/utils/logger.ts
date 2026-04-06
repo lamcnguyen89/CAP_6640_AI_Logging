@@ -1,6 +1,7 @@
 import winston from "winston";
 import path from "path";
 import { MongoDB } from "winston-mongodb";
+import { asyncLocalStorage } from "../middleware/correlationId";
 /**
  * Unified Logger Utility with Winston
  * Provides environment-aware logging with different levels
@@ -163,32 +164,40 @@ class Logger {
   // Log method for an error message
   // Example: logger.error('Database query failed', { userId: '123', query: 'SELECT * FROM users' })
   error(message: string, meta?: Record<string, any>): void {
-    this.winstonLogger.error(message, meta || {});
+    const correlationId = asyncLocalStorage.getStore()?.correlationId;
+    this.winstonLogger.error(message, { correlationId, ...meta });
   }
 
   // Log method for a warning message
   // Example: logger.warn('API rate limit approaching', { remaining: 10, limit: 100 })
   warn(message: string, meta?: Record<string, any>): void {
-    this.winstonLogger.warn(message, meta || {});
+    const correlationId = asyncLocalStorage.getStore()?.correlationId;
+    this.winstonLogger.warn(message, { correlationId, ...meta });
   }
 
   // Log method for an informational message
   // Example: logger.info('User logged in', { userId: '123', email: 'user@example.com' })
   info(message: string, meta?: Record<string, any>): void {
-    this.winstonLogger.info(message, meta || {});
+    const correlationId = asyncLocalStorage.getStore()?.correlationId;
+    this.winstonLogger.info(message, { correlationId, ...meta });
   }
 
   // Log method for debug messages
   // Example: logger.debug('Processing request', { method: 'GET', path: '/api/users' })
   debug(message: string, meta?: Record<string, any>): void {
-    this.winstonLogger.debug(message, meta || {});
+    const correlationId = asyncLocalStorage.getStore()?.correlationId;
+    this.winstonLogger.debug(message, { correlationId, ...meta });
   }
 
   // Special method for system startup messages (always shown except in tests)
   // Example: logger.system('Server started', { port: 3000, env: 'development' })
   system(message: string, meta?: Record<string, any>): void {
     if (!this.isTestMode) {
-      this.winstonLogger.info(`[SYSTEM] ${message}`, meta || {});
+      const correlationId = asyncLocalStorage.getStore()?.correlationId;
+      this.winstonLogger.info(`[SYSTEM] ${message}`, {
+        correlationId,
+        ...meta,
+      });
     }
   }
 }

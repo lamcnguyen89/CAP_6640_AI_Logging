@@ -24,6 +24,11 @@ import institutions from "./routes/api/institutions";
 import { logger } from "./utils/logger";
 var jwt = require("jsonwebtoken");
 
+// Import Middleware for Correlation ID to help AI Agent track individual user activity across the application
+import { correlationIdMiddleware } from "./middleware/correlationId";
+
+// Apply Correlation ID middleware to all incoming requests
+// This will generate a unique correlation ID for each request and make it available in the async context for logging
 // **** DB CONFIG ****
 
 import configPassport from "./config/passport";
@@ -60,8 +65,11 @@ app.use(
     extended: true,
     limit: "100mb",
     parameterLimit: 50000,
-  })
+  }),
 );
+
+// Add Correlation ID middleware to generate a unique correlation ID for each request and make it available in the async context for logging
+app.use(correlationIdMiddleware);
 app.use(express.json());
 
 // Serve static files in the /static directory
@@ -122,28 +130,28 @@ app.ws(`/api/ws`, function (ws, req) {
                   type: "authentication",
                   payload: false,
                   msg: err,
-                })
+                }),
               );
             } else {
               // Authenticate the connection in the WebSocket service
               const authenticated =
                 await websocketService.authenticateConnection(
                   connectionId,
-                  parsed.payload.token
+                  parsed.payload.token,
                 );
 
               if (authenticated) {
                 ws.send(
-                  JSON.stringify({ type: "authentication", payload: true })
+                  JSON.stringify({ type: "authentication", payload: true }),
                 );
               } else {
                 ws.send(
-                  JSON.stringify({ type: "authentication", payload: false })
+                  JSON.stringify({ type: "authentication", payload: false }),
                 );
                 ws.close();
               }
             }
-          }
+          },
         );
       } else if (parsed.type === "ping") {
         // Handle ping messages to keep the connection alive
@@ -155,13 +163,13 @@ app.ws(`/api/ws`, function (ws, req) {
           websocketService.subscribeToFileTypeProcessing(
             connectionId,
             participantId,
-            fileTypeId
+            fileTypeId,
           );
           ws.send(
             JSON.stringify({
               type: "csv_processing_subscription",
               payload: { subscribed: true, participantId, fileTypeId },
-            })
+            }),
           );
         }
       } else if (parsed.type === "unsubscribe_csv_processing") {
@@ -171,7 +179,7 @@ app.ws(`/api/ws`, function (ws, req) {
           JSON.stringify({
             type: "csv_processing_subscription",
             payload: { subscribed: false },
-          })
+          }),
         );
       } else {
         // Default message handling for other types of messages
@@ -202,7 +210,7 @@ configPassport(passport);
 const addServerConfig = function (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // passing some db and mongoose information to these routes
   req.serverConfig = {
