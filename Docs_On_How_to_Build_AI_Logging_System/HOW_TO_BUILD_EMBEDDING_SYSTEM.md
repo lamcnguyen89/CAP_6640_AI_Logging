@@ -302,3 +302,90 @@ server/src/
 ---
 
 This approach leverages your existing Winston + MongoDB setup and creates a scalable pipeline for AI analysis.
+
+# Recommended Storage of Vectors.
+
+I want to keep it local and use my hardware for the purposes of this project. So I'll use Qdrant
+
+Since you're already running everything locally in Docker, here are your best options:
+
+```
+# docker-compose.dev.yml
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: sh-qdrant
+    ports:
+      - "6333:6333"  # REST API
+      - "6334:6334"  # gRPC API
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+```
+
+**_Implementation:_**
+
+```typescript
+import { QdrantClient } from "@qdrant/js-client-rest";
+
+const client = new QdrantClient({
+  url: "http://qdrant:6333",
+});
+
+// Store embeddings
+await client.upsert("logs", {
+  points: [
+    {
+      id: chunk.id,
+      vector: embedding,
+      payload: {
+        correlationId: chunk.correlationId,
+        timestamp: chunk.timestamp,
+        logText: chunk.text,
+      },
+    },
+  ],
+});
+
+// Search
+const results = await client.search("logs", {
+  vector: questionEmbedding,
+  limit: 10,
+  filter: {
+    must: [{ key: "timestamp", range: { gte: startDate } }],
+  },
+});
+```
+
+---
+
+**My Recommendation: Start Local with Qdrant**
+
+Since you're already running everything in Docker for development, I strongly recommend:
+
+1. Use Qdrant locally for development and testing
+2. Your AI agent will have faster access (no network latency)
+3. Zero cost during development
+4. Complete data privacy (logs never leave your infrastructure)
+5. Easy to switch to cloud later if needed (Qdrant Cloud exists, or migrate to Pinecone)
+6. The Hybrid Approach (Best of Both Worlds)
+
+This gives you:
+
+Fast local development
+Option to scale to cloud if your dataset grows beyond local capacity
+
+---
+
+**When to Consider Cloud**
+Move to cloud vector storage when:
+
+Your embedding dataset exceeds 10M+ vectors
+You need multi-region distribution
+You want zero-maintenance managed service
+Your AI agent runs in a different infrastructure than your logs
+
+---
+
+**Bottom Line:** For your use case (analyzing application logs), local vector storage with Qdrant is ideal. It keeps everything in your control, costs nothing, and integrates perfectly with your existing Docker setup. Your AI agent will access them faster since it's all on the same network.
+
+Want me to show you how to add Qdrant to your docker-compose setup and create the embedding service?
