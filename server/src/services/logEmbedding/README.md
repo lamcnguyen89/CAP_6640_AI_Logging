@@ -1,52 +1,148 @@
-# Log Ingestion Service
+# Log Embedding Services
 
-This service implements **Step 1** of the log embedding pipeline: **Log Retrieval & Processing**.
-
-## Overview
-
-The Log Ingestion Service retrieves system logs from MongoDB's `system_logs` collection and prepares them for embedding. It tracks which logs have been processed and provides batch retrieval capabilities.
+This module implements the complete log embedding pipeline for AI-powered log analysis.
 
 ## Architecture
 
+**MongoDB Logs → Ingestion → Chunking → Embedding → Vector DB → AI Agent**
+
+## Services Overview
+
+### 1. **Ingestion Service** (`ingestion.service.ts`) - Step 1
+
+Retrieves logs from MongoDB's `system_logs` collection.
+
+**Key Features:**
+
+- Fetch unprocessed logs in batches
+- Track processed logs with `embedded` flag
+- Query by correlationId, time range, or criteria
+- Mark logs as processed after embedding
+
+**Example:**
+
+```typescript
+import { logIngestionService } from "./services/logEmbedding";
+
+const logs = await logIngestionService.fetchUnprocessedLogs(100);
 ```
-MongoDB (system_logs) → LogIngestionService → Embedding Pipeline (Step 2+)
+
+---
+
+### 2. **Chunking Service** (`chunking.service.ts`) - Step 2
+
+Groups logs into meaningful chunks for embedding.
+
+**Strategies:**
+
+- **Correlation-based**: Groups by correlationId (recommended)
+- **Time-window**: Groups by time periods (5-min windows)
+- **Hybrid**: Combines both approaches
+
+**Example:**
+
+```typescript
+import { logChunkingService } from "./services/logEmbedding";
+
+const chunks = logChunkingService.groupByCorrelationId(logs);
+const text = logChunkingService.formatChunkForEmbedding(chunks[0]);
 ```
 
-## Files
+---
 
-- **`types/systemLog.ts`** - TypeScript interfaces for system logs
-- **`config/logsDb.ts`** - Database connection manager for the logs database
-- **`services/logEmbedding/ingestion.service.ts`** - Main ingestion service
-- **`services/logEmbedding/index.ts`** - Barrel export for easy imports
-- **`services/logEmbedding/usage-examples.ts`** - Example usage patterns
+### 3. **Embedding Service** (`embedding.service.ts`) - Step 3
 
-## Features
+Creates vector embeddings using OpenAI's API.
 
-### ✅ Batch Processing
+**Model:** `text-embedding-3-small` (1536 dimensions)  
+**Cost:** ~$0.02 per 1M tokens
 
-- Fetch logs in configurable batch sizes (default: 500)
-- Prevents memory overload with large log volumes
+**Example:**
 
-### ✅ Processing Tracking
+```typescript
+import { embeddingService } from "./services/logEmbedding";
 
-- Automatically marks logs as processed with `embedded: true` flag
-- Tracks `embeddedAt` timestamp
-- Prevents duplicate processing
+// Embed a chunk
+const embedding = await embeddingService.embedLogChunk(chunk);
 
-### ✅ Correlation ID Support
+// Embed multiple chunks efficiently
+const embeddings = await embeddingService.embedLogChunks(chunks);
 
-- Fetch all logs for a specific user journey
-- Groups related logs by `correlationId`
+// Embed a user query
+const queryEmbedding = await embeddingService.embedText(
+  "Why did the login fail?",
+);
+```
 
-### ✅ Time-Based Queries
+---
 
-- Fetch logs within specific time ranges
-- Incremental processing from last checkpoint
+## Setup
 
-### ✅ Monitoring
+### 1. Environment Variables
 
-- Get count of unprocessed logs
-- Track backlog size
+Add to your `.env` file:
+
+```bash
+OPENAI_API_KEY=sk-your-api-key-here
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install openai --legacy-peer-deps
+```
+
+---
+
+## Complete Pipeline Example
+
+```typescript
+import {
+  logIngestionService,
+  logChunkingService,
+  embeddingService,
+} from "./services/logEmbedding";
+
+async function processLogs() {
+  // 1. Fetch unprocessed logs
+  const logs = await logIngestionService.fetchUnprocessedLogs(100);
+
+  // 2. Chunk by correlationId
+  const chunks = logChunkingService.groupByCorrelationId(logs);
+
+  // 3. Estimate cost
+  const cost = embeddingService.estimateBatchCost(chunks);
+  console.log(`Estimated cost: $${cost.toFixed(6)}`);
+
+  // 4. Create embeddings
+  const embeddings = await embeddingService.embedLogChunks(chunks);
+
+  // 5. Store in vector DB (next step)
+  // await vectorStore.save(chunks, embeddings);
+
+  // 6. Mark logs as processed
+  const logIds = logs.map((log) => log._id).filter(Boolean);
+  await logIngestionService.markAsProcessed(logIds);
+}
+```
+
+---
+
+## Example Files
+
+- **`example.usage.ts`** - Basic ingestion and chunking examples
+- **`pipeline.examples.ts`** - Complete pipeline with embedding examples
+
+---
+
+## Next Steps
+
+1. **Set up Vector Database** (Qdrant recommended)
+2. **Store embeddings with metadata**
+3. **Implement similarity search**
+4. **Build AI agent for log analysis**
+
+See `HOW_TO_BUILD_EMBEDDING_SYSTEM.md` for details.
 
 ## Usage
 
