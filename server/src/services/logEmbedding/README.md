@@ -4,7 +4,7 @@ This module implements the complete log embedding pipeline for AI-powered log an
 
 ## Architecture
 
-**MongoDB Logs → Ingestion → Chunking → Embedding → Vector DB → AI Agent**
+**MongoDB Logs → Ingestion → Chunking → Embedding → Qdrant Vector Storage → AI Agent**
 
 ## Services Overview
 
@@ -76,6 +76,68 @@ const queryEmbedding = await embeddingService.embedText(
 
 ---
 
+### 4. **Vector Store Service** (`vectorStore.service.ts`) - Step 4
+
+Stores embeddings in Qdrant vector database for similarity search.
+
+**Features:**
+
+- Local Qdrant running in Docker (full data privacy)
+- Cosine similarity for text embeddings
+- Metadata storage for filtering
+- Batch operations for efficiency
+- Similarity search with filters
+
+**Example:**
+
+```typescript
+import { vectorStoreService } from "./services/logEmbedding";
+
+// Initialize (creates collection if needed)
+await vectorStoreService.initialize();
+
+// Store a single embedding
+await vectorStoreService.storeEmbedding(chunk, embedding);
+
+// Store multiple embeddings (more efficient)
+await vectorStoreService.storeBatchEmbeddings(chunks, embeddings);
+
+// Search for similar logs
+const results = await vectorStoreService.search(queryEmbedding, 10);
+```
+
+---
+
+### 5. **Pipeline Service** (`pipeline.service.ts`) - Complete Workflow
+
+Orchestrates all steps in the embedding pipeline.
+
+**Features:**
+
+- One-command batch processing
+- Automatic initialization
+- Error handling and logging
+- Cost tracking
+- Statistics and monitoring
+
+**Example:**
+
+```typescript
+import { logEmbeddingPipeline } from "./services/logEmbedding";
+
+// Initialize once
+await logEmbeddingPipeline.initialize();
+
+// Process logs in one command
+const result = await logEmbeddingPipeline.processBatch(100);
+console.log(`Processed ${result.logsProcessed} logs, cost: $${result.cost}`);
+
+// Search for similar logs
+const results = await logEmbeddingPipeline.searchLogs("database error", 10);
+```
+
+---
+
 ## Setup
 
 ### 1. Environment Variables
@@ -84,12 +146,21 @@ Add to your `.env` file:
 
 ```bash
 OPENAI_API_KEY=sk-your-api-key-here
+QDRANT_URL=http://qdrant:6333  # Default for Docker
 ```
 
-### 2. Install Dependencies
+### 2. Start Qdrant with Docker
+
+Qdrant is already configured in `docker-compose.dev.yml`:
 
 ```bash
-npm install openai --legacy-peer-deps
+docker compose -f docker-compose.dev.yml up -d qdrant
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install openai @qdrant/js-client-rest --legacy-peer-deps
 ```
 
 ---
@@ -97,32 +168,31 @@ npm install openai --legacy-peer-deps
 ## Complete Pipeline Example
 
 ```typescript
-import {
-  logIngestionService,
-  logChunkingService,
-  embeddingService,
-} from "./services/logEmbedding";
+import { logEmbeddingPipeline } from "./services/logEmbedding";
 
 async function processLogs() {
-  // 1. Fetch unprocessed logs
-  const logs = await logIngestionService.fetchUnprocessedLogs(100);
+  // 1. Initialize pipeline (one time)
+  await logEmbeddingPipeline.initialize();
 
-  // 2. Chunk by correlationId
-  const chunks = logChunkingService.groupByCorrelationId(logs);
+  // 2. Process a batch of logs (all steps automated)
+  const result = await logEmbeddingPipeline.processBatch(100);
 
-  // 3. Estimate cost
-  const cost = embeddingService.estimateBatchCost(chunks);
-  console.log(`Estimated cost: $${cost.toFixed(6)}`);
+  console.log(`✅ Processed ${result.logsProcessed} logs`);
+  console.log(`✅ Created ${result.embeddingsStored} embeddings`);
+  console.log(`💰 Cost: $${result.cost.toFixed(6)}`);
+  console.log(`⏱  Duration: ${result.duration}ms`);
 
-  // 4. Create embeddings
-  const embeddings = await embeddingService.embedLogChunks(chunks);
+  // 3. Search for similar logs
+  const searchResults = await logEmbeddingPipeline.searchLogs(
+    "authentication error",
+    5,
+  );
 
-  // 5. Store in vector DB (next step)
-  // await vectorStore.save(chunks, embeddings);
-
-  // 6. Mark logs as processed
-  const logIds = logs.map((log) => log._id).filter(Boolean);
-  await logIngestionService.markAsProcessed(logIds);
+  searchResults.forEach((result) => {
+    console.log(`Score: ${result.score.toFixed(4)}`);
+    console.log(`Correlation ID: ${result.correlationId}`);
+    console.log(`Messages: ${result.sampleMessages.join(", ")}`);
+  });
 }
 ```
 
@@ -130,23 +200,62 @@ async function processLogs() {
 
 ## Example Files
 
-- **`example.usage.ts`** - Basic ingestion and chunking examples
-- **`pipeline.examples.ts`** - Complete pipeline with embedding examples
+- **`qdrant-examples.ts`** - Complete pipeline examples with Qdrant
+- **`pipeline.examples.ts`** - Advanced pipeline patterns
+- **`usage-examples.ts`** - Basic service usage
+- **`quickstart.ts`** - Quick start guide
+
+---
+
+## Qdrant Features
+
+### Collection Information
+
+```typescript
+const info = await vectorStoreService.getCollectionInfo();
+console.log(`Vectors stored: ${info.pointsCount}`);
+```
+
+### Advanced Search with Filters
+
+```typescript
+const results = await vectorStoreService.search(queryEmbedding, 10, {
+  correlationId: "abc-123",
+  logLevel: "error",
+  startDate: new Date("2024-01-01"),
+  endDate: new Date("2024-12-31"),
+});
+```
+
+### Retrieve Specific Points
+
+```typescript
+const point = await vectorStoreService.getPoint("chunk-id-123");
+console.log(point.payload); // Access metadata
+```
+
+---
+
+## Monitoring & Statistics
+
+```typescript
+const stats = await logEmbeddingPipeline.getStatistics();
+console.log(`Pending logs: ${stats.pendingLogs}`);
+console.log(`Vectors in Qdrant: ${stats.qdrantInfo.pointsCount}`);
+```
 
 ---
 
 ## Next Steps
 
-1. **Set up Vector Database** (Qdrant recommended)
-2. **Store embeddings with metadata**
-3. **Implement similarity search**
-4. **Build AI agent for log analysis**
+1. ✅ **Vector Database Setup** - Qdrant running in Docker
+2. ✅ **Store embeddings with metadata** - Implemented
+3. ✅ **Implement similarity search** - Ready to use
+4. 🔜 **Build AI agent for log analysis** - Coming next
 
-See `HOW_TO_BUILD_EMBEDDING_SYSTEM.md` for details.
+See `qdrant-examples.ts` for complete usage examples.
 
-## Usage
-
-### Basic Usage
+## Quick Start
 
 ```typescript
 import { logIngestionService } from "./services/logEmbedding";
